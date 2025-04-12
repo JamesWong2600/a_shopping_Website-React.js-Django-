@@ -1,6 +1,30 @@
 /* From Uiverse.io by alexruix */ 
 
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 100%;
+    height: 100vh;
+    transform: translateX(0%);
+    transition: transform 0.5s
+}
 
+.rightmove{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 100%;
+    height: 100vh;
+    transform: translateX(10%);
+    transition: transform 0.5s
+}
+
+/*Rows1*/
 .card-a {
     width: 190px;
     height: 300px;
@@ -52,6 +76,63 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     transition: transform 0.7s, box-shadow 0.7s;
 }
+
+
+
+
+/*Rows2*/
+.card-e {
+    width: 190px;
+    height: 300px;
+    padding: .8em;
+    background: #f5f5f5;
+    overflow: visible;
+    position: absolute;
+    left: 10%;
+    top: 70%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: transform 0.7s, box-shadow 0.7s;
+}
+
+.card-f {
+    width: 190px;
+    height: 300px;
+    padding: .8em;
+    background: #f5f5f5;
+    overflow: visible;
+    position: absolute;
+    left: 30%;
+    top: 70%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: transform 0.7s, box-shadow 0.7s;
+}
+
+.card-g {
+    width: 190px;
+    height: 300px;
+    padding: .8em;
+    background: #f5f5f5;
+    overflow: visible;
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: transform 0.7s, box-shadow 0.7s;
+}
+
+.card-h {
+    width: 190px;
+    height: 300px;
+    padding: .8em;
+    background: #f5f5f5;
+    overflow: visible;
+    position: absolute;
+    left: 70%;
+    top: 70%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: transform 0.7s, box-shadow 0.7s;
+}
+
 .card-a:hover {
     transform: scale(1.1);
     box-shadow: rgba(226, 196, 63, 0.25) 0px 13px 47px -5px, rgba(180, 71, 71, 0.3) 0px 8px 16px -8px;
@@ -102,7 +183,7 @@ svg {
 /*Text*/
 .text-title {
     font-weight: 900;
-    font-size: 1.2em;
+    font-size: 0.8em;
     line-height: 1.5;
 }
 
@@ -132,3 +213,34 @@ svg {
     background-color: #ffcaa6;
 }
    
+
+/*button*/
+.btn {
+    width: 60px;
+    height: 40px;
+    font-size: 1.1em;
+    cursor: pointer;
+    background-color: #171717;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: all .4s;
+    top: 80%;
+    left: 60%;
+}
+
+.btn:hover {
+    border-radius: 5px;
+    transform: translateY(-10px);
+    box-shadow: 0 7px 0 -2px #f85959,
+    0 15px 0 -4px #39a2db,
+    0 16px 10px -3px #39a2db;
+}
+
+.btn:active {
+    transition: all 0.2s;
+    transform: translateY(-5px);
+    box-shadow: 0 2px 0 -2px #f85959,
+    0 8px 0 -4px #39a2db,
+    0 12px 10px -3px #39a2db;
+}

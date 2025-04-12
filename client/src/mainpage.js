@@ -1,88 +1,318 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/mainpage.css';
+import './css/vertical_bar.css';
 
 function Mainpage() {
     const navigate = useNavigate();
 
+    const [formData] = useState({
+        item_name: '',
+        price: ''
+    });
+
+    const [userIP, setUserIP] = useState('');
+
+    useEffect(() => {
+        const getUserIP = async () => {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                setUserIP(data.ip);
+                console.log('User IP:', data.ip);
+            } catch (error) {
+                console.error('Error getting IP:', error);
+            }
+        };
+        
+        getUserIP();
+    }, []);
+
+    const handleSubmit = async (item_name, price) => {
+        const data = {
+            item_name: item_name,
+            price: price,
+            user_ip: userIP 
+        };
+        try {
+            const response = await fetch('http://127.0.0.1:8000/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Registration successful:', data);
+                alert('Registration successful!');
+            } else {
+                const errorData = await response.json();
+                console.error('Registration failed:', errorData);
+                alert(errorData.message || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+            alert('Network error occurred');
+        }
+    };
+
+
+    useEffect(() => {
+        
+        const body = document.querySelector("body");
+        const sidebar = body.querySelector("nav");
+        const toggle = body.querySelector(".toggle");
+        const searchBtn = body.querySelector(".search-box");
+        const modeSwitch = body.querySelector(".toggle-switch");
+        const modeText = body.querySelector(".mode-text");
+        const cards = body.querySelector(".cards");
+
+        
+        if (toggle) {
+            toggle.addEventListener("click", () => {
+                sidebar.classList.toggle("close");
+                cards.classList.toggle("rightmove");
+            });
+          }
+
+       
+
+        if (searchBtn) {
+            searchBtn.addEventListener("click", () => {
+                sidebar.classList.remove("close");
+            });
+        }
+
+        if (modeSwitch) {
+            modeSwitch.addEventListener("click", () => {
+                body.classList.toggle("dark");
+                if (body.classList.contains("dark")) {
+                    modeText.innerText = "Light mode";
+                } else {
+                    modeText.innerText = "Dark mode";
+                }
+            });
+        }
+
+        // Cleanup function to remove event listeners
+        return () => {
+            if (toggle) toggle.removeEventListener("click", () => {});
+            if (searchBtn) searchBtn.removeEventListener("click", () => {});
+            if (modeSwitch) modeSwitch.removeEventListener("click", () => {});
+        };
+    }); 
+  
     return (
         <div className="background-container">
-            <div class="card-a">
-            <div class="card-img"></div>
-            <div class="card-info">
-            <p class="text-title">Product title </p>
-            <p class="text-body">Product description and details</p>
-            </div>
-            <div class="card-footer">
-            <span class="text-title">$499.49</span>
-            <div class="card-button">
-            <svg class="svg-icon" viewBox="0 0 20 20">
-                <path d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z"></path>
-                <path d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z"></path>
-                <path d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z"></path>
-            </svg>
-            </div>
-            </div>
-            </div>
 
-            <div class="card-b">
-            <div class="card-img"></div>
-            <div class="card-info">
-            <p class="text-title">Product title </p>
-            <p class="text-body">Product description and details</p>
-            </div>
-            <div class="card-footer">
-            <span class="text-title">$499.49</span>
-            <div class="card-button">
-            <svg class="svg-icon" viewBox="0 0 20 20">
-                <path d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z"></path>
-                <path d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z"></path>
-                <path d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z"></path>
-            </svg>
-            </div>
-            </div>
-            </div>
+            <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css'></link>
+            <link rel='stylesheet' href='https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css'></link>
+            <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&amp;display=swap'></link>
+
+            
+              <nav className="sidebar close">
+                <header>
+                    <div className="image-text">
+                        <a href="#" className="text-logo-a">
+                            <span className="image">
+                                <img src="#" alt="" />
+                            </span>
+                            <div className="text logo-text">
+                                <span className="name">hardware website</span>
+                            </div>
+                        </a>
+                        <span className="profession">👋 Hello, James</span>
+                    </div>
+                    <i className='bx bx-chevron-right toggle'></i>
+                </header>
+                <div className="menu-bar">
+                    <div className="menu">
+                        <ul className="menu-links">
+                            <li className="search-box">
+                                <i className='bx bx-search icon'></i>
+                                <input type="text" placeholder="Search..." />
+                            </li>
+                            <li className="nav-link">
+                                <a href="#">
+                                    <span className="text nav-text">shopping_cart</span>
+                                </a>
+                            </li>
+                            <li className="nav-link">
+                                <a href="#">
+                                    <span className="text nav-text">statistic</span>
+                                </a>
+                            </li>
+                            <li className="nav-link">
+                                <a href="#">
+                                    <span className="text nav-text">Notifications</span>
+                                </a>
+                            </li>
+                            <li className="nav-link">
+                                <a href="#">
+                                    <span className="text nav-text">Analytics</span>
+                                </a>
+                            </li>
+                            <li className="nav-link">
+                                <a href="#">
+                                    <span className="text nav-text">Likes</span>
+                                </a>
+                            </li>
+                            <li className="nav-link">
+                                <a href="#">
+                                    <span className="text nav-text">Wallets</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="bottom-content">
+                        <li>
+                            <a href="#">
+                                <i className='bx bx-log-out icon'></i>
+                                <span className="text nav-text">Logout</span>
+                            </a>
+                        </li>
+                        <li className="mode">
+                            <div className="sun-moon">
+                                <i className='bx bx-moon icon moon'></i>
+                                <i className='bx bx-sun icon sun'></i>
+                            </div>
+                            <span className="mode-text text">Dark mode</span>
+                            <div className="toggle-switch">
+                                <span className="switch"></span>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            </nav>
+            
 
 
-            <div class="card-c">
-            <div class="card-img"></div>
-            <div class="card-info">
-            <p class="text-title">Product title </p>
-            <p class="text-body">Product description and details</p>
-            </div>
-            <div class="card-footer">
-            <span class="text-title">$499.49</span>
-            <div class="card-button">
-            <svg class="svg-icon" viewBox="0 0 20 20">
-                <path d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z"></path>
-                <path d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z"></path>
-                <path d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z"></path>
-            </svg>
-            </div>
-            </div>
-            </div>
+            <div className="cards">
+                <div className="card-a">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">CPU void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.9</span>
+                        <button onClick={() => handleSubmit("CPU", "0.9")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div> 
+           
+                <div className="card-b">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">Mainboard void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.18</span>
+                        <button onClick={() => handleSubmit("mainboard", "0.18")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div> 
 
-            <div class="card-d">
-            <div class="card-img"></div>
-            <div class="card-info">
-            <p class="text-title">Product title </p>
-            <p class="text-body">Product description and details</p>
-            </div>
-            <div class="card-footer">
-            <span class="text-title">$499.49</span>
-            <div class="card-button">
-            <svg class="svg-icon" viewBox="0 0 20 20">
-                <path d="M17.72,5.011H8.026c-0.271,0-0.49,0.219-0.49,0.489c0,0.271,0.219,0.489,0.49,0.489h8.962l-1.979,4.773H6.763L4.935,5.343C4.926,5.316,4.897,5.309,4.884,5.286c-0.011-0.024,0-0.051-0.017-0.074C4.833,5.166,4.025,4.081,2.33,3.908C2.068,3.883,1.822,4.075,1.795,4.344C1.767,4.612,1.962,4.853,2.231,4.88c1.143,0.118,1.703,0.738,1.808,0.866l1.91,5.661c0.066,0.199,0.252,0.333,0.463,0.333h8.924c0.116,0,0.22-0.053,0.308-0.128c0.027-0.023,0.042-0.048,0.063-0.076c0.026-0.034,0.063-0.058,0.08-0.099l2.384-5.75c0.062-0.151,0.046-0.323-0.045-0.458C18.036,5.092,17.883,5.011,17.72,5.011z"></path>
-                <path d="M8.251,12.386c-1.023,0-1.856,0.834-1.856,1.856s0.833,1.853,1.856,1.853c1.021,0,1.853-0.83,1.853-1.853S9.273,12.386,8.251,12.386z M8.251,15.116c-0.484,0-0.877-0.393-0.877-0.874c0-0.484,0.394-0.878,0.877-0.878c0.482,0,0.875,0.394,0.875,0.878C9.126,14.724,8.733,15.116,8.251,15.116z"></path>
-                <path d="M13.972,12.386c-1.022,0-1.855,0.834-1.855,1.856s0.833,1.853,1.855,1.853s1.854-0.83,1.854-1.853S14.994,12.386,13.972,12.386z M13.972,15.116c-0.484,0-0.878-0.393-0.878-0.874c0-0.484,0.394-0.878,0.878-0.878c0.482,0,0.875,0.394,0.875,0.878C14.847,14.724,14.454,15.116,13.972,15.116z"></path>
-            </svg>
-            </div>
-            </div>
-            </div>
+
+                <div className="card-c">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">ssd void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.07</span>
+                        <button onClick={() => handleSubmit("SSD", "0.07")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div>
+        
+
+                <div className="card-d">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">GPU void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$1.7</span>
+                        <button onClick={() => handleSubmit("GPU", "1.7")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div>
+
+
+                <div className="card-e">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">power supply void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.56</span>
+                        <button onClick={() => handleSubmit("power supply", "0.56")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div>
+
+
+                <div className="card-f">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">cooler void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.05</span>
+                        <button onClick={() => handleSubmit("cooler", "0.05")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div>
+
+                <div className="card-g">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">case void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.03</span>
+                        <button onClick={() => handleSubmit("cooler", "0.03")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div>
+
+
+                
+                <div className="card-h">
+                    <div className="card-img"></div>
+                    <div className="card-info">
+                        <p className="text-title">ram void edition</p>
+                        <p className="text-body">manufactured my air</p>
+                    </div>
+                    <div className="card-footer">
+                        <span className="text-title">$0.05</span>
+                        <button onClick={() => handleSubmit("cooler", "0.05")} className="btn">
+                            add
+                        </button>
+                    </div>
+                </div>
+        
 
             </div>
-
+            </div>
     );
 }
 

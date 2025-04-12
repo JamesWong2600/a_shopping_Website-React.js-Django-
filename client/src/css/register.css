@@ -82,10 +82,9 @@ color: var(--bg-dark);
 color: var(--clr);
 }
 
-  
-/*the button */
-.btn {
-    width: 130px;
+/*button*/
+.btn2 {
+    width: 200px;
     height: 40px;
     font-size: 1.1em;
     cursor: pointer;
@@ -94,11 +93,11 @@ color: var(--clr);
     border: none;
     border-radius: 5px;
     transition: all .4s;
-    position: absolute;
-    left: 12%;
+    top: 300%;
+    left: 5;
 }
 
-.btn:hover {
+.btn2:hover {
     border-radius: 5px;
     transform: translateY(-10px);
     box-shadow: 0 7px 0 -2px #f85959,
@@ -106,7 +105,7 @@ color: var(--clr);
     0 16px 10px -3px #39a2db;
 }
 
-.btn:active {
+.btn2:active {
     transition: all 0.2s;
     transform: translateY(-5px);
     box-shadow: 0 2px 0 -2px #f85959,
